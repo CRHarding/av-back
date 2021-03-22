@@ -17,17 +17,37 @@ const getAll = (req, res) => {
     })
 }
 
+const create = (req, res) => {
+  Avmaint.create(req.body)
+  .then(newAircraft => {
+    res.status(200).json(newAircraft)
+  })
+  .catch(err => console.error(err));
+}
+
+const update = (req, res) => {
+  Avmaint.update(req.body, {
+    where: {
+      id: req.params.id
+    }
+  })
+  .then(() => {
+    Avmaint.findByPk(req.params.id)
+      .then(aircraft => res.status(200).json(aircraft))
+      .catch(err => console.error(err))
+  }).catch(err => console.error(err))
+}
 // const getAvmaintById = (req, res) => {
 //     let sort = 'DESC';
 //     if(req.query.sorted === 'asc')
 //         sort = 'ASC';
-    
+
 //     Avmaint.findById(req.params.avmaint, {
 //         include: [
 //             {
 //                 model: Avmaint,
 //                 attributes: ['id', 'acmodel', 'engmodel', 'ttaf', 'ttsn', 'smoh', 'annualinsp', 'awdirectives', 'damagehist'],
-                
+
 //             }
 //         ],
 //         order: [
@@ -48,5 +68,6 @@ const getAll = (req, res) => {
 
 module.exports = {
     getAll,
-//  getAvmaintById
+    create,
+    update
 }
